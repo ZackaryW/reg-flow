@@ -1,0 +1,12 @@
+{
+    "ID": "34AF5616C1E640F988C1BB8499551618",
+    "ActionKeyword": "rg",
+    "Name": "RegFlow",
+    "Description": "a new plugin for Flow",
+    "Author": "ZackaryW",
+    "Version": "1.0.0",
+    "Language": "csharp",
+    "Website": "https://github.com/ZackaryW/Flow.Launcher.Plugin.RegFlow",
+    "IcoPath": "icon.png",
+    "ExecuteFileName": "Flow.Launcher.Plugin.RegFlow.dll"
+}

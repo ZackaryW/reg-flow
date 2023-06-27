@@ -1,0 +1,12 @@
+{
+    "ID": "DE33302E508240339481CDC65EF5D003",
+    "ActionKeyword": "rg",
+    "Name": "Reg Flow",
+    "Description": "Registry Viewer",
+    "Author": "ZackaryW",
+    "Version": "1.0.0",
+    "Language": "csharp",
+    "Website": "https://github.com/ZackaryW/reg-flow",
+    "ExecuteFileName": "RegFlowCSharp.dll",
+    "IcoPath": "Images\\app.png"
+}
