@@ -7,6 +7,8 @@ namespace Flow.Launcher.Plugin.RegFlow
     public class RegFlow : IPlugin
     {
         private PluginInitContext _context = null!;
+        private bool _includeValues = true;
+        private bool _includeSubKeys = true;
 
         public void Init(PluginInitContext context)
         {
@@ -81,6 +83,12 @@ namespace Flow.Launcher.Plugin.RegFlow
         /// @sub for just subkeys
         ///</summary>
         {
+
+            if (query.FirstSearch == query.Search){
+                _includeSubKeys = true;
+                _includeValues = true;
+            }
+
             if (query.Search == "" || query.Search == "computer")
             {
                 return defaultResults();
@@ -88,63 +96,26 @@ namespace Flow.Launcher.Plugin.RegFlow
 
             // query get string
             string queryBaseString = query.Search;
-            // split query string by space
-            string[] queryArray = queryBaseString.Split(' ');
-            if (queryArray.Length >= 2 || (queryArray.Length == 1 && queryArray[0].Contains("@")))
-            {
-                return new List<Result>(){
-                    new Result(){
-                        Title = "Error",
-                        SubTitle = "Invalid Query",
-                        IcoPath = "Images\\error.png"
-                    }
-                };
-            }
 
             // determine which is query string
-            bool includeValues = true;
-            bool includeSubKeys = true;
-            string queryString;
-            if (queryArray.Length == 1)
+            bool includeValues = _includeValues;
+            bool includeSubKeys = _includeSubKeys;
+            string queryString = queryBaseString;
+            if (queryBaseString.Contains("@") && queryBaseString.StartsWith("@"))
             {
-                // query string is queryArray[0]
-                queryString = queryArray[0];
-            }
-            else if (queryArray[0] == "@val")
-            {
-                // query string is queryArray[1]
-                queryString = queryArray[1];
-                includeSubKeys = false;
-            }
-            else if (queryArray[0] == "@sub")
-            {
-                // query string is queryArray[1]
-                queryString = queryArray[1];
-                includeValues = false;
-            }
-            else if (queryArray[1] == "@val")
-            {
-                // query string is queryArray[0]
-                queryString = queryArray[0];
-                includeSubKeys = false;
-            }
-            else if (queryArray[1] == "@sub")
-            {
-                // query string is queryArray[0]
-                queryString = queryArray[0];
-                includeValues = false;
-            }
-            else
-            {
-                return new List<Result>(){
-                    new Result(){
-                        Title = "Error",
-                        SubTitle = "Invalid Query",
-                        IcoPath = "Images\\error.png"
-                    }
-                };
+                string[] queryArray = queryBaseString.Split(' ', 1);
+                if (queryArray[0] == "@val"){
+                    includeSubKeys = false;
+                }
+                if (queryArray[0] == "@sub"){
+                    includeValues = false;
+                }
+                queryString = queryArray[1]; 
             }
 
+            //!SECTION
+            queryString = queryString.Replace("//", "/");
+            queryString = queryString.Replace("\\", "/");
 
             RegInfo? regInfo;
             try{
@@ -181,7 +152,21 @@ namespace Flow.Launcher.Plugin.RegFlow
             }
 
             List<Result> results = new List<Result>();
+            // add return
+            if (queryString.Contains("/"))
+            {
             
+
+                results.Add(
+                    makeActionableQuery(
+                        "Return",
+                        "Return to previous folder",
+                        "Images\\return.png",
+                        queryString.Substring(0, queryString.LastIndexOf('/'))
+                    )
+                );
+            }
+
             if (includeSubKeys)
             {
                 foreach (string subFolder in regInfo.subFolders)
@@ -191,7 +176,7 @@ namespace Flow.Launcher.Plugin.RegFlow
                             subFolder,
                             "Registry Subkey",
                             "Images\\folder.png",
-                            $"{queryBaseString}/{subFolder} "
+                            $"{queryString}/{subFolder}" 
                         )
                     );
                 }
@@ -209,7 +194,6 @@ namespace Flow.Launcher.Plugin.RegFlow
                     });
                 }
             }
-
             return results;
         }
     }
