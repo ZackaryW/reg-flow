@@ -6,3 +6,8 @@ A plugin for the [Flow launcher](https://github.com/Flow-Launcher/Flow.Launcher)
 ### Usage
 
     rg <arguments>
+
+
+### Screenshots
+
+![RG_0](docs/imgs/root.png)
