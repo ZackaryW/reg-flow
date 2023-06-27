@@ -191,6 +191,11 @@ namespace Flow.Launcher.Plugin.RegFlow
                         Title = subValue.Item3,
                         SubTitle = "[" + subValue.Item2 + "] " + subValue.Item1,
                         IcoPath = "Images\\data.png",
+                        Action = e =>
+                        {
+                            _context.API.CopyToClipboard(subValue.Item3);
+                            return false;
+                        }
                     });
                 }
             }
